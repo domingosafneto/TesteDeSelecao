@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\domin\\source\\repos\\Mirante\\Questao2\\Questao2.csproj": {}
+    "C:\\Users\\domin\\source\\repos\\mirante\\Questao2\\Questao2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\domin\\source\\repos\\Mirante\\Questao2\\Questao2.csproj": {
+    "C:\\Users\\domin\\source\\repos\\mirante\\Questao2\\Questao2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\domin\\source\\repos\\Mirante\\Questao2\\Questao2.csproj",
+        "projectUniqueName": "C:\\Users\\domin\\source\\repos\\mirante\\Questao2\\Questao2.csproj",
         "projectName": "Questao2",
-        "projectPath": "C:\\Users\\domin\\source\\repos\\Mirante\\Questao2\\Questao2.csproj",
+        "projectPath": "C:\\Users\\domin\\source\\repos\\mirante\\Questao2\\Questao2.csproj",
         "packagesPath": "C:\\Users\\domin\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\domin\\source\\repos\\Mirante\\Questao2\\obj\\",
         "projectStyle": "PackageReference",

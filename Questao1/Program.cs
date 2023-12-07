@@ -24,7 +24,7 @@ namespace Questao1 {
 
             Console.WriteLine();
             Console.WriteLine("Dados da conta:");
-            Console.WriteLine(conta);
+            Console.WriteLine("Conta " + conta.Numero + ", " + "Titular " + conta.Titular + ", " + "Saldo $ " +conta.GetSaldo());
 
             Console.WriteLine();
             Console.Write("Entre um valor para depósito: ");
