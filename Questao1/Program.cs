@@ -3,9 +3,15 @@ using System.Globalization;
 
 namespace Questao1 {
     class Program {
+
         static void Main(string[] args) {
 
             ContaBancaria conta;
+
+            void ImprimirConta(ContaBancaria pConta)
+            {
+                Console.WriteLine("Conta " + pConta.Numero + ", " + "Titular: " + pConta.Titular + ", " + "Saldo: $ " + pConta.GetSaldo().ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+            }
 
             Console.Write("Entre o número da conta: ");
             int numero = int.Parse(Console.ReadLine());
@@ -24,22 +30,29 @@ namespace Questao1 {
 
             Console.WriteLine();
             Console.WriteLine("Dados da conta:");
-            Console.WriteLine("Conta " + conta.Numero + ", " + "Titular " + conta.Titular + ", " + "Saldo $ " +conta.GetSaldo());
+            ImprimirConta(conta);            
 
             Console.WriteLine();
             Console.Write("Entre um valor para depósito: ");
             double quantia = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            conta.Deposito(quantia);
-            Console.WriteLine("Dados da conta atualizados:");
-            Console.WriteLine(conta);
+
+            if (quantia >= 0)
+            {
+                conta.Deposito(quantia);
+                Console.WriteLine("Dados da conta atualizados:");
+                ImprimirConta(conta);               
+            }
 
             Console.WriteLine();
             Console.Write("Entre um valor para saque: ");
             quantia = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            conta.Saque(quantia);
-            Console.WriteLine("Dados da conta atualizados:");
-            Console.WriteLine(conta);
 
+            if (quantia >= 0)
+            {
+                conta.Saque(quantia);
+                Console.WriteLine("Dados da conta atualizados:");
+                ImprimirConta(conta);                
+            }
             /* Output expected:
             Exemplo 1:
 
