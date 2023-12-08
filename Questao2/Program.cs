@@ -3,8 +3,8 @@ using System.Text.Json;
 using Questao2;
 
 public class Program
-{    
-
+{
+    static int gols;
     public static void Main()
     {
         string teamName = "Paris Saint-Germain";
@@ -26,56 +26,44 @@ public class Program
 
     public static int getTotalScoredGoals(string team, int year)
     {
-        int vGols = 0;
-       // FazerRequisicao(team, year);
+        gols = 0;
+
+        string urlBase = "https://jsonmock.hackerrank.com/api/football_matches";
+        string queryParams = "?year=" + year + "&team1=" + team;
         
-        return 0;
-    }
-
-
-    public static async Task FazerRequisicao(string time, int ano)
-    {
-        string baseUrl = "https://jsonmock.hackerrank.com/api/football_matches";
-        string queryParams = "?year=" + ano.ToString() + "&team1=" + time;
+        string url = urlBase + queryParams;
 
         using (HttpClient client = new HttpClient())
         {
-            try
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync(baseUrl + queryParams);
+                JsonRoot jsonRoot = new JsonRoot();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                string responseBody = response.Content.ReadAsStringAsync().Result;
+                jsonRoot = JsonSerializer.Deserialize<JsonRoot>(responseBody);
 
-                    List<FootballMatch> json = JsonSerializer.Deserialize<List<FootballMatch>>(responseBody);
 
-                    if (json != null)
-                    {
-                        foreach (FootballMatch match in json)
+                
+                // ajustar
+                    foreach(JsonRoot match in matches)
+                    { 
+                        if (match.Year == year.ToString())
                         {
-                            if (match.Year == ano)
+                            if (match.Team1 == team)
                             {
-                                if (match.Team1 == time)
-                                {
-
-                                }
+                                gols = gols + 1;
                             }
                         }
-                    }                    
+                    }
 
-                }
-                else
-                {
-                    Console.WriteLine("A requisição não foi bem sucedida. Código: " + response.StatusCode);
-                }
             }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("Erro ao fazer a requisição: " + e.Message);
-            }
+
         }
-    }
 
+
+       return gols;
+    }
 
 }
