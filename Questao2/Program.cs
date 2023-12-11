@@ -33,8 +33,6 @@ public class Program
 
         while (numeroTime >= 1)
         {
-
-
             int paginas;
 
             string urlBase = "https://jsonmock.hackerrank.com/api/football_matches";
@@ -64,10 +62,15 @@ public class Program
 
                     while (paginas >= 1)
                     {
+                        string queryParams2;
                         using (HttpClient client2 = new HttpClient())
                         {
                             JsonRoot jsonRoot2 = new JsonRoot();
-                            string queryParams2 = "?year=" + year + "&team1=" + team + "&page=" + paginas;
+                            if (numeroTime == 1)
+                                queryParams2 = "?year=" + year + "&team1=" + team + "&page=" + paginas;
+                            else
+                                queryParams2 = "?year=" + year + "&team2=" + team + "&page=" + paginas;
+
                             string url2 = urlBase + queryParams2;
 
                             HttpResponseMessage response2 = client.GetAsync(url2).Result;
@@ -79,37 +82,22 @@ public class Program
 
                                 foreach (var item in jsonRoot2.data)
                                 {
-                                    //if (item.Year == year.ToString())
-                                    //{
-                                    //    if (item.Team1 == team)
-                                    //    {
                                     if (numeroTime == 1)
                                         gols = gols + int.Parse(item.Team1Goals);
                                     else
                                         gols = gols + int.Parse(item.Team2Goals);
-                                    //     }
-
-                                    //    if (item.Team2 == team)
-                                    //    {
-                                    //       gols = gols + int.Parse(item.Team2Goals);
-                                    //  }
-                                    //  }
                                 }
-
                             }
                         }
 
                         paginas = paginas - 1;
                     }
-
                 }
-
             }
 
             numeroTime = numeroTime - 1;
-        }                // fim while principal
+        }                // fim while que controla a posicao do time
 
             return gols;
     }    
-
 }
