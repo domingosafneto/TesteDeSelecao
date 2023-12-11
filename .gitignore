@@ -1,0 +1,39 @@
+# Arquivos temporários gerados pelo Visual Studio
+.vs/
+/bin/
+/obj/
+
+# Arquivos de compilação
+*.exe
+*.dll
+*.pdb
+*.dll.config
+
+# Arquivos de dependências do NuGet
+/packages/
+
+# Arquivos de configuração do .NET Core/Standard
+*.lock.json
+*.user
+
+# Cache e diretórios de ferramentas do .NET
+/.NET/
+/Tools/
+
+# Arquivos de configuração do sistema
+*.suo
+*.userprefs
+*.bak
+*.cache
+
+# Logs e dados temporários
+*.log
+*.json
+
+# Arquivos de build
+msbuild.log
+msbuild.err
+
+# Arquivos de análise de código
+*.csproj.user
+*.ruleset
