@@ -1,4 +1,4 @@
-﻿namespace Questao5.Models
+﻿namespace Questao5.Domain.Entities
 {
     public class ContaCorrente
     {
@@ -6,9 +6,9 @@
 
         public int Numero { get; set; }
 
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
 
-        public int ativo { get; set; } = 0;
+        public int Ativo { get; set; } = 0;
 
     }
 }
