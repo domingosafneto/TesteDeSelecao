@@ -47,13 +47,25 @@ namespace Questao5.Infrastructure.Services
             return ultimoId + 1;
         }
 
-        public async Task<decimal> ObterSaldoContaCorrente(string idContaCorrente)
+        public async Task<decimal> GetSaldoContaCorrente(string idContaCorrente)
         {
             var saldo = await _context.Movimentos
                 .Where(m => m.IdContaCorrente == idContaCorrente)
                 .SumAsync(m => m.TipoMovimento == "C" ? m.Valor : -m.Valor);
 
             return saldo;
+        }
+
+        // retorna o nome do titular da conta corrente
+        public async Task<string> GetNomeTitularContaCorrente(string idContaCorrente)
+        {
+            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
+            if (contaCorrente == null)
+            {
+                throw new Exception("Conta corrente não encontrada.");
+            }
+
+            return contaCorrente.Nome;
         }
 
     }

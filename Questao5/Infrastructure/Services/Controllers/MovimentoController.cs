@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Questao5.Data;
 using Questao5.Domain.Entities;
+using Questao5.Domain.Response;
 
 namespace Questao5.Infrastructure.Services.Controllers
 {
@@ -27,7 +28,34 @@ namespace Questao5.Infrastructure.Services.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Erro ao movimentar a conta corrente: {ex.Message}");
+                return BadRequest($"Erro ao movimentar a conta corrente: {ex.Message}"); 
+            }
+        }
+
+
+        [HttpGet("{idContaCorrente}/saldo")]
+        public async Task<IActionResult> GetSaldoContaCorrente(string idContaCorrente)
+        {
+            try
+            {
+                decimal saldo = await _contaCorrenteService.GetSaldoContaCorrente(idContaCorrente);
+
+
+                string nomeTitular = await _contaCorrenteService.GetNomeTitularContaCorrente(idContaCorrente);
+
+                var response = new SaldoContaCorrenteResponse
+                {
+                    Saldo = saldo,
+                    DataHoraRequisicao = DateTime.Now,
+                    TitularContaCorrente = nomeTitular,
+
+            };
+
+                return Ok(response);                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro obter saldo da conta corrente: {ex.Message}");
             }
         }
 
