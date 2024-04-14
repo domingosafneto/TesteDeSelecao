@@ -93,7 +93,6 @@ namespace Questao5.Infrastructure.Services
             return contaCorrente.Nome;
         }
 
-
         // pega o núnero de uma conta corrente
         public async Task<int> GetNumeroContaCorrente(string idContaCorrente)
         {
@@ -104,25 +103,6 @@ namespace Questao5.Infrastructure.Services
             }
 
             return contaCorrente.Numero;
-        }
-
-
-        // retorna status da conta (ativo 1, 0 inativo)
-        public async Task<int> GetStatusConta(string idContaCorrente) 
-        {
-            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
-            if (contaCorrente == null)
-            {
-                throw new Exception("Conta corrente não encontrada.");
-            }
-
-            return contaCorrente.Ativo;
-        }
-
-        public async Task<bool> VerificaSeContaCadastrada(string idContaCorrente)
-        {
-            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
-            return contaCorrente != null;
         }
 
     }
