@@ -2,6 +2,13 @@
 {
     public class Movimento
     {
+        public Movimento() 
+        { 
+            IdContaCorrente = "";
+            TipoMovimento = "";
+        
+        }
+
         public int IdMovimento { get; set; }
 
         public string IdContaCorrente { get; set; }

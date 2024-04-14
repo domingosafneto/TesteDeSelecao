@@ -1,33 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Questao5.Data;
 using Questao5.Domain.Entities;
+using Questao5.Infrastructure.Services.Controllers;
+using System.Resources;
 
 namespace Questao5.Infrastructure.Services
 {
     public class ContaCorrenteService
     {
         private readonly Questao5DbContext _context;
+        private readonly ResourceManager _resourceManager;
 
         public ContaCorrenteService(Questao5DbContext context)
         {
             _context = context;
+            _resourceManager = new ResourceManager("Questao5.Resources.MensagensErro", typeof(MovimentoController).Assembly);
         }
 
         public async Task MovimentarContaCorrente(string idContaCorrente, string tipoMovimento, decimal valor)
         {
-            // Verificar se a conta corrente está ativa
             var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
-            if (contaCorrente == null || contaCorrente.Ativo == 0)
+            
+            if (contaCorrente == null)  
             {
-                throw new Exception("Conta corrente não encontrada ou inativa.");
+                throw new Exception(_resourceManager.GetString("INVALID_ACCOUNT"));
             }
 
-            // Verificar se o tipo de movimento é válido
+            if (contaCorrente.Ativo == 0) 
+            {
+                throw new Exception(_resourceManager.GetString("INACTIVE_ACCOUNT"));
+            }
+
             if (tipoMovimento != "C" && tipoMovimento != "D")
             {
-                throw new Exception("Tipo de movimento inválido.");
+                throw new Exception(_resourceManager.GetString("INVALID_TYPE"));
             }
-            
+
+            if (valor < 0)  
+            {
+                throw new Exception(_resourceManager.GetString("INVALID_VALUE"));
+            }
+
             var movimento = new Movimento
             {
                 IdMovimento = await GerarNovoIdMovimento(),
@@ -49,6 +62,18 @@ namespace Questao5.Infrastructure.Services
 
         public async Task<decimal> GetSaldoContaCorrente(string idContaCorrente)
         {
+            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
+
+            if (contaCorrente == null)
+            {
+                throw new Exception(_resourceManager.GetString("INVALID_ACCOUNT"));
+            }
+
+            if (contaCorrente.Ativo == 0)
+            {
+                throw new Exception(_resourceManager.GetString("INACTIVE_ACCOUNT"));
+            }
+
             var saldo = await _context.Movimentos
                 .Where(m => m.IdContaCorrente == idContaCorrente)
                 .SumAsync(m => m.TipoMovimento == "C" ? m.Valor : -m.Valor);
@@ -66,6 +91,38 @@ namespace Questao5.Infrastructure.Services
             }
 
             return contaCorrente.Nome;
+        }
+
+
+        // pega o núnero de uma conta corrente
+        public async Task<int> GetNumeroContaCorrente(string idContaCorrente)
+        {
+            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
+            if (contaCorrente == null)
+            {
+                throw new Exception("Conta corrente não encontrada.");
+            }
+
+            return contaCorrente.Numero;
+        }
+
+
+        // retorna status da conta (ativo 1, 0 inativo)
+        public async Task<int> GetStatusConta(string idContaCorrente) 
+        {
+            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
+            if (contaCorrente == null)
+            {
+                throw new Exception("Conta corrente não encontrada.");
+            }
+
+            return contaCorrente.Ativo;
+        }
+
+        public async Task<bool> VerificaSeContaCadastrada(string idContaCorrente)
+        {
+            var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
+            return contaCorrente != null;
         }
 
     }

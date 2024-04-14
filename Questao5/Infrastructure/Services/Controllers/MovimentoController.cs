@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Questao5.Data;
 using Questao5.Domain.Entities;
 using Questao5.Domain.Response;
+using System.Resources;
 
 namespace Questao5.Infrastructure.Services.Controllers
 {
@@ -12,10 +13,10 @@ namespace Questao5.Infrastructure.Services.Controllers
     public class MovimentoController : ControllerBase
     {
         private readonly ContaCorrenteService _contaCorrenteService;
-
+        
         public MovimentoController(Questao5DbContext context, ContaCorrenteService contaCorrenteService)
         {
-            _contaCorrenteService = contaCorrenteService;
+            _contaCorrenteService = contaCorrenteService;            
         }
 
         [HttpPost("movimentar")]
@@ -28,7 +29,7 @@ namespace Questao5.Infrastructure.Services.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Erro ao movimentar a conta corrente: {ex.Message}"); 
+                return BadRequest($"Erro ao movimentar a conta corrente: {ex.Message}");
             }
         }
 
@@ -40,24 +41,31 @@ namespace Questao5.Infrastructure.Services.Controllers
             {
                 decimal saldo = await _contaCorrenteService.GetSaldoContaCorrente(idContaCorrente);
 
-
                 string nomeTitular = await _contaCorrenteService.GetNomeTitularContaCorrente(idContaCorrente);
+                int numeroConta = await _contaCorrenteService.GetNumeroContaCorrente(idContaCorrente);
+
+                if (saldo == 0)
+                {
+                    return Ok(new SaldoContaCorrenteResponse
+                    {
+                        Saldo = 0   
+                    });
+                }
 
                 var response = new SaldoContaCorrenteResponse
                 {
                     Saldo = saldo,
+                    NumeroContaCorrente = numeroConta,
                     DataHoraRequisicao = DateTime.Now,
                     TitularContaCorrente = nomeTitular,
+                };
 
-            };
-
-                return Ok(response);                
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro obter saldo da conta corrente: {ex.Message}");
             }
         }
-
     }
 }
