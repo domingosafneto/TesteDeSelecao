@@ -3,6 +3,8 @@ using Questao5.Data;
 using Questao5.Domain.Entities;
 using Questao5.Infrastructure.Services.Controllers;
 using System.Resources;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Questao5.Infrastructure.Services
 {
@@ -17,8 +19,14 @@ namespace Questao5.Infrastructure.Services
             _resourceManager = new ResourceManager("Questao5.Resources.MensagensErro", typeof(MovimentoController).Assembly);
         }
 
-        public async Task MovimentarContaCorrente(string idContaCorrente, string tipoMovimento, decimal valor)
-        {
+        public async Task MovimentarContaCorrente(string idContaCorrente, string tipoMovimento, decimal valor, string chaveIdempotencia)
+        {            
+            var operacaoAnterior = await _context.Idempotencias.FirstOrDefaultAsync(i => i.chave_idempotencia == chaveIdempotencia);
+            if (operacaoAnterior != null)
+            {                
+                return;
+            }
+
             var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
             
             if (contaCorrente == null)  
@@ -51,6 +59,9 @@ namespace Questao5.Infrastructure.Services
             };
 
             _context.Movimentos.Add(movimento);
+            
+            _context.Idempotencias.Add(new Idempotencia { chave_idempotencia = chaveIdempotencia });
+
             await _context.SaveChangesAsync();
         }
 
@@ -61,7 +72,7 @@ namespace Questao5.Infrastructure.Services
         }
 
         public async Task<decimal> GetSaldoContaCorrente(string idContaCorrente)
-        {
+        {            
             var contaCorrente = await _context.ContasCorrentes.FindAsync(idContaCorrente);
 
             if (contaCorrente == null)
@@ -80,6 +91,7 @@ namespace Questao5.Infrastructure.Services
 
             return saldo;
         }
+
 
         // retorna o nome do titular da conta corrente
         public async Task<string> GetNomeTitularContaCorrente(string idContaCorrente)
@@ -104,6 +116,5 @@ namespace Questao5.Infrastructure.Services
 
             return contaCorrente.Numero;
         }
-
     }
 }

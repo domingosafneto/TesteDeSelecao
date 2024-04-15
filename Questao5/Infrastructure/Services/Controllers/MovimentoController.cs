@@ -20,11 +20,11 @@ namespace Questao5.Infrastructure.Services.Controllers
         }
 
         [HttpPost("movimentar")]
-        public async Task<IActionResult> MovimentarContaCorrente(string idContaCorrente, string tipoMovimento, decimal valor)
+        public async Task<IActionResult> MovimentarContaCorrente(string idContaCorrente, string tipoMovimento, decimal valor, string chaveIdempotencia)
         {
             try
             {
-                await _contaCorrenteService.MovimentarContaCorrente(idContaCorrente, tipoMovimento, valor);
+                await _contaCorrenteService.MovimentarContaCorrente(idContaCorrente, tipoMovimento, valor, chaveIdempotencia);
                 return Ok("Movimentação da conta corrente realizada com sucesso.");
             }
             catch (Exception ex)

@@ -7,5 +7,6 @@
         public string requisicao { get; set; } 
 
         public string resultado { get; set; }
+        
     }
 }

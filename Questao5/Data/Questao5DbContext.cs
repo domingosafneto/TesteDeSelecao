@@ -8,6 +8,8 @@ namespace Questao5.Data
         public DbSet<Movimento> Movimentos { get; set; }
         public DbSet<ContaCorrente> ContasCorrentes { get; set; }
 
+        public DbSet<Idempotencia> Idempotencias { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("localhost");
